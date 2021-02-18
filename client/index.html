@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Cancer Diagnosis</title>
+  </head>
+  <body>
+    <p>Response Fetched From server</p>
+    <div id="response"></div>
+    <script type="text/javascript">
+      const api = "http://localhost:5000/";
+      window.onload = function () {
+        fetch(api)
+          .then((res) => res.text())
+          .then(
+            (text) => (document.getElementById("response").innerHTML = text)
+          )
+          .catch(
+            (err) => (document.getElementById("response").innerHTML = err)
+          );
+      };
+    </script>
+  </body>
+</html>
