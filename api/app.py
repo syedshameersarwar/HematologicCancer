@@ -11,6 +11,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def hello():
     return "Hello World!"
 
+@app.route('/flask/get-response')
+def response():
+    return "Yo mayn"
+
 
 if __name__ == '__main__':
     app.run()
