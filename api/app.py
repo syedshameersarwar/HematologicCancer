@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect, url_for
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
@@ -14,6 +14,13 @@ def hello():
 @app.route('/flask/get-response')
 def response():
     return "Yo mayn"
+
+@app.route('/flask/upload-csv', methods=['POST'])
+def uploadCsv():
+    uploadedfile = request.files['files']
+    if uploadedfile.filename != '':
+        uploadedfile.save(uploadedfile.filename)
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
