@@ -26,6 +26,7 @@
         />
       </label>
       <button v-on:click="submitFile()">Submit</button>
+      <p v-if="predictionResult">{{ predictionResult }}</p>
     </div>
   </div>
 </div>

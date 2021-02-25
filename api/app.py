@@ -1,5 +1,6 @@
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
+from prediction import Predict
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -17,14 +18,16 @@ def response():
 
 @app.route('/flask/upload-csv', methods=['POST'])
 def uploadCsv():
-    print(request.headers)
-    print(request.files['file'])
     uploadedfile = request.files['file']
     print('FILE', uploadedfile)
     if uploadedfile.filename != '':
         uploadedfile.save(uploadedfile.filename)
-    return "recieved!"
+    print(type(str(uploadedfile.filename)))    
+    pred = Predict()
+    result = pred.predictLogistic(str(uploadedfile.filename))
+    print(result)
+    return result
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

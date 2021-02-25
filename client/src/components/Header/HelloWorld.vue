@@ -17,6 +17,7 @@ export default {
       apiResponse: "",
       csv: null,
       file: "",
+      predictionResult: "",
     };
   },
   methods: {
@@ -30,12 +31,10 @@ export default {
     },
     async submitFile() {
       let formData = new FormData();
-      console.info(this.file);
       formData.append("file", this.file);
-      console.info(formData);
-      // let body = "hello gutentag";
-      let response = testService.uploadCsv(formData);
-      console.info(response);
+      let response = await testService.uploadCsv(formData);
+      this.predictionResult = response.data;
+      console.info(this.predictionResult);
     },
   },
 };
