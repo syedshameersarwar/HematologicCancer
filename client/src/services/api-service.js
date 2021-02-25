@@ -12,9 +12,10 @@ class ApiService {
     }
     post(data) {
         return flaskBackendService.request({
+            headers: data.headers,
             method: "post",
             url: data.url,
-            params: data.params
+            data: data.body
         });
     }
 }

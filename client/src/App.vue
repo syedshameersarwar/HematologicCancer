@@ -2,19 +2,16 @@
   <div id="app">
     <img id="ned" alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld msg="Early Screening and Detection of Hematologic Cancer using Complete Blood Count"/>
-    <UploadCSV/>
   </div>
 </template>
 
 <script>
 import HelloWorld from "./components/Header/HelloWorld.vue";
-import UploadCSV from "./components/uploadCSV/uploadCSV.vue";
 
 export default {
   name: "App",
   components: {
     HelloWorld,
-    UploadCSV,
   }, 
   data: () =>{
     return {

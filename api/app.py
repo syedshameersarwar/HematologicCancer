@@ -17,10 +17,13 @@ def response():
 
 @app.route('/flask/upload-csv', methods=['POST'])
 def uploadCsv():
-    uploadedfile = request.files['files']
+    print(request.headers)
+    print(request.files['file'])
+    uploadedfile = request.files['file']
+    print('FILE', uploadedfile)
     if uploadedfile.filename != '':
         uploadedfile.save(uploadedfile.filename)
-    return redirect(url_for('index'))
+    return "recieved!"
 
 
 if __name__ == '__main__':

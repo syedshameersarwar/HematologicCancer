@@ -11,7 +11,8 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "quasar": "^1.15.4",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-csv-import": "^2.3.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
