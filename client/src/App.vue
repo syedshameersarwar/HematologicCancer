@@ -1,17 +1,25 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Fuck the Vue.js App" />
+    <img id="ned" alt="Vue logo" src="./assets/logo.png" />
+    <HelloWorld msg="Early Screening and Detection of Hematologic Cancer using Complete Blood Count"/>
+    <UploadCSV/>
   </div>
 </template>
 
 <script>
 import HelloWorld from "./components/Header/HelloWorld.vue";
+import UploadCSV from "./components/uploadCSV/uploadCSV.vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld
+    HelloWorld,
+    UploadCSV,
+  }, 
+  data: () =>{
+    return {
+
+    };
   }
 };
 </script>
@@ -24,5 +32,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  font-size: 10px;
+}
+img{
+  width: 16%;
+  height: 200px;
 }
 </style>

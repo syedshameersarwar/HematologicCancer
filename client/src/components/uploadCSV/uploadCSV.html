@@ -1,0 +1,51 @@
+<div class="q-pa-md column items-start q-gutter-y-md">
+  <q-file
+    :value="files"
+    @input="updateFiles"
+    label="Pick files"
+    outlined
+    multiple
+    :clearable="!isUploading"
+    style="max-width: 400px"
+  >
+    <template v-slot:file="{ index, file }">
+      <q-chip
+        class="full-width q-my-xs"
+        :removable="isUploading && uploadProgress[index].percent < 1"
+        square
+        @remove="cancelFile(index)"
+      >
+        <q-linear-progress
+          class="absolute-full full-height"
+          :value="uploadProgress[index].percent"
+          :color="uploadProgress[index].color"
+          track-color="grey-2"
+        />
+
+        <q-avatar>
+          <q-icon :name="uploadProgress[index].icon" />
+        </q-avatar>
+
+        <div class="ellipsis relative-position">
+          {{ file.name }}
+        </div>
+
+        <q-tooltip>
+          {{ file.name }}
+        </q-tooltip>
+      </q-chip>
+    </template>
+
+    <template v-slot:after v-if="canUpload">
+      <q-btn
+        color="primary"
+        dense
+        icon="cloud_upload"
+        round
+        @click="upload"
+        :disable="!canUpload"
+        :loading="isUploading"
+      />
+    </template>
+  </q-file>
+</div>
