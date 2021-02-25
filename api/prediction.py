@@ -12,7 +12,7 @@ filename = 'logisticReg.sav'
 
 class Predict():
     
-    def predictLogistic(filePath):
+    def predictLogistic(self, filePath):
         cancers = ['Control', 'AML', 'CML', 'MDS', 'MDS/MPN', 'MPN', 'ALL', 'HL', 'NHL', 'MM', 'APML']
         model = pickle.load(open(filename, 'rb'))
         
@@ -34,6 +34,4 @@ class Predict():
         new_x.shape
         
         y_new = model.predict(new_x)
-        print(y_new)
-        print(cancers[y_new[0]])
-        return y_new
+        return cancers[y_new[0]]
