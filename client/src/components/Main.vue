@@ -1,7 +1,8 @@
 <template>
   <div>
     <div style="text-align: center; margin: 5px; padding: 10px">
-      <img id="ned" alt="Vue logo" src="../assets/logo.png" />
+      <img id="ned" alt="Ned logo" src="../assets/logo.png" />
+      <img id="nipd" alt="Nipd logo" src="../assets/nipd.jpeg" />
       <br />
       <h2>
         Early Screening and Detection of Hematologic Cancer using Complete Blood
@@ -143,6 +144,7 @@ export default {
     csv: null,
     loaded: false,
     columns: [],
+    csvFile: null,
     data: [],
     predictionLoading: false,
     predictions: null,
@@ -156,6 +158,7 @@ export default {
     reset() {
       this.loaded = false;
       this.csv = null;
+      this.csvFile = null;
       this.data = [];
       this.columns = [];
       this.activeKey = [];
@@ -168,12 +171,14 @@ export default {
       this.reset();
       if (window.FileReader) {
         const reader = new FileReader();
+        this.csvFile = e.target.files[0];
         reader.readAsText(e.target.files[0]);
         reader.onload = event => (this.csv = event.target.result);
         reader.onerror = event => {
           if (event.target.error.name === "NotReadableError") {
             alert("Cannot read file !");
           }
+          this.csvFile = null;
         };
       } else {
         alert("FileReader are not supported in this browser.");
@@ -195,9 +200,8 @@ export default {
         result.push({ ...obj, key: indexLine });
       });
       result.pop();
-      if (result.length > 1000)
-        return alert("Quote Exceeded, Max allowed size is 20."); // 1000 -> 30 or 20
-      // if (result.length > 30) result = result.splice(0, 30); //remove this
+      if (result.length > 30)
+        return alert("Quote Exceeded, Max allowed size is 30.");
       this.columns = headers
         .filter(header => header !== "")
         .map(header => ({
@@ -214,15 +218,15 @@ export default {
       try {
         if (this.predictionsLoaded) return;
         this.predictionLoading = true;
-        // let predictions = await ApiService.generateDatasetPrediction(this.csv); //uncomment this and remove following(mock) line
-        let predictions = await ApiService.generateDatasetPredictionMock(
-          this.csv
+        let predictions = await ApiService.generateDatasetPrediction(
+          this.csvFile
         );
-        const headers = Object.keys(predictions[0]).map(key => ({
+        let headers = Object.keys(predictions[0]).map(key => ({
           title: key.toUpperCase(),
           dataIndex: key,
           width: 100
         }));
+        headers = [headers[1]].concat([headers[0], headers[2]]);
         predictions = predictions.map((prediction, i) => ({
           ...prediction,
           key: i + 1
@@ -241,6 +245,7 @@ export default {
         this.predictionsLoaded = true;
         this.$notification["success"]({
           message: "Prediction's Ready",
+          duration: 10,
           description: `Our Model has evaluted your data with accruacy: ${accuracy}%`
         });
         this.activeKey = this.activeKey.concat("3");
@@ -248,9 +253,11 @@ export default {
         console.error(err.message ? err.message : err);
         this.$notification["error"]({
           message: "Error During Inference",
+          duration: 10,
           description:
             "Unknown error occured during the inference process.Check server logs for details."
         });
+        this.predictionLoading = false;
       }
     }
   }
@@ -270,5 +277,6 @@ export default {
 img {
   width: 8%;
   height: 90px;
+  margin: 10px;
 }
 </style>
