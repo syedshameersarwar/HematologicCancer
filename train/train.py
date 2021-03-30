@@ -2,10 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split 
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
+from sklearn.feature_selection import RFE
 
 
 class Train():
@@ -43,6 +45,7 @@ class Train():
 
         Returns
         new_x: this x holds all the features that are selected using chiSquare Method
+        y: nothing changes in y
         '''
         test = SelectKBest(score_func=chi2, k='all')
         fit = test.fit(x, y)
@@ -64,6 +67,33 @@ class Train():
 
         return (new_x, y)
 
+    def RFE(self, x, y):
+       '''
+        Args
+        x: in the x variable we have all the input features Hb, WBC, PLT etc
+        y: in the y variable we have all the output sub groups of our blood cancer
+
+        Returns
+        selectedFeatures: this x holds all the features that are selected using RFE Method
+        y: nothing changes in y.
+        '''
+        model = LogisticRegression(solver='lbfgs')
+
+        rfe = RFE(model, 30)
+        fit = rfe.fit(x, y)
+
+        rfeFeatures = fit.ranking_
+        rfe_x = zip(rfeFeatures, x.columns)
+        rfe_x = sorted(tuple(rfe_x))
+
+        selectedFeatures = []
+        for i in range(len(rfe_x)):
+            if ( rfe_x[i][0] == 1 ):
+                selectedFeatures.append(rfe_x[i][1])
+        selectedFeatures = x[selectedFeatures]
+
+        return (selectedFeatures, y)
+
     def TrainLR(self, data):
         #Pre-Processing
         x, y = self.prepare(data)
@@ -72,6 +102,20 @@ class Train():
         #Training
         xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size= 0.1, random_state= 42)
         model = LogisticRegression(solver='lbfgs', max_iter=2000).fit(xtrain, ytrain)
+
+        #Testing
+        print(model.score(xtest, ytest))
+        print(classification_report(ytest, model.predict(xtest)))
+
+    def TrainSVM(self, data):
+        #Pre-Processing
+        x, y = self.prepare(data)
+        x, y = self.RFE(x, y)
+
+        #Training
+        xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2, random_state=3)
+        model = SVC(kernel='poly', probability=True, C=15, verbose=2, random_state=42)
+        model.fit(xtrain, ytrain)
 
         #Testing
         print(model.score(xtest, ytest))
