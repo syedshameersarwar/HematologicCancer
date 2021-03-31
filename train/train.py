@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split 
 from sklearn.feature_selection import SelectKBest
@@ -68,7 +69,7 @@ class Train():
         return (new_x, y)
 
     def RFE(self, x, y):
-       '''
+        '''
         Args
         x: in the x variable we have all the input features Hb, WBC, PLT etc
         y: in the y variable we have all the output sub groups of our blood cancer
@@ -78,7 +79,6 @@ class Train():
         y: nothing changes in y.
         '''
         model = LogisticRegression(solver='lbfgs')
-
         rfe = RFE(model, 30)
         fit = rfe.fit(x, y)
 
@@ -120,4 +120,36 @@ class Train():
         #Testing
         print(model.score(xtest, ytest))
         print(classification_report(ytest, model.predict(xtest)))
+
+    def TrainDC(self, data):
+        #Pre-Processing
+        x, y = self.prepare(data)
+        x, y = self.RFE(x, y)
+
+        #Training
+        xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2, random_state=3)
+        model = DecisionTreeClassifier(random_state=5)
+        classifier = model.fit(xtrain, ytrain)
+        
+        print("Trying post pruning with complexity pruning to remove overfitting")
+
+        path = classifier.cost_complexity_pruning_path(xtrain, ytrain)
+
+        ccp_alphas, impurities = path.ccp_alphas, path.impurities
+
+        classifiers = []
+        for ccp_alpha in ccp_alphas:
+            classifier = DecisionTreeClassifier(random_state=0, ccp_alpha=ccp_alpha)
+            classifier.fit(xtrain, ytrain)
+            classifiers.append(classifier)
+
+        #Testing
+        classifiers = classifiers[:-1]
+        ccp_alphas = ccp_alphas[:-1]
+
+        train_scores = [clf.score(xtrain, ytrain) for clf in classifiers]
+        test_scores = [clf.score(xtest, ytest) for clf in classifiers]
+        max_test_accuracy_classifier = classifiers[test_scores.index(max(test_scores))]
+        max_test_score = max_test_accuracy_classifier.score(xtest, ytest)
+        print("Model Test Score after pruning: ", max_test_score)
 
