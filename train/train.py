@@ -9,6 +9,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 from sklearn.feature_selection import RFE
+import tensorflow as tf
+import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
 
 
 class Train():
@@ -153,3 +157,27 @@ class Train():
         max_test_score = max_test_accuracy_classifier.score(xtest, ytest)
         print("Model Test Score after pruning: ", max_test_score)
 
+
+
+    def TrainANN(self, data):
+        #Pre-Processing
+        x, y = self.prepare(data)
+        x, y = self.RFE(x, y)
+        x = np.asarray(x).astype('float32')
+        xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size = 0.1, random_state=42)
+
+        #Training
+        model = tf.keras.models.Sequential()
+        model.add(tf.keras.layers.Dense(128, input_dim=30, activation=tf.nn.relu))
+        model.add(tf.keras.layers.Dense(64, activation=tf.nn.relu))
+        model.add(tf.keras.layers.Dense(13, activation=tf.nn.softmax))
+        model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+        model.fit(xtrain, ytrain, validation_data=(xtest, ytest), epochs=300, batch_size=48)
+
+        #Testing
+        val_loss, val_acc = model.evaluate(xtest, ytest)
+        print(val_loss)
+        print(val_acc)
+        y_pred = model.predict(xtest, batch_size=64, verbose=1)
+        y_pred_bool = np.argmax(y_pred, axis=1)
+        print(classification_report(ytest, y_pred_bool))
