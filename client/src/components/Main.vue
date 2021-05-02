@@ -200,7 +200,7 @@ export default {
         result.push({ ...obj, key: indexLine });
       });
       result.pop();
-      if (result.length > 30)
+      if (result.length > 50)
         return alert("Quote Exceeded, Max allowed size is 30.");
       this.columns = headers
         .filter(header => header !== "")
