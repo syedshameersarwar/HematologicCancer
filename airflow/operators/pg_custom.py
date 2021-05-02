@@ -28,7 +28,7 @@ class CheckPostgresTableExistence(BaseOperator):
         allowed_conn_type = 'postgres'
         if conn.conn_type != allowed_conn_type:
             raise AirflowException(
-                "The connection type is not supported by SqlSensor. "
+                "The connection type is not supported by CheckPostgresTableExistence. "
                 f"Supported connection types: {allowed_conn_type}"
             )
         return conn.get_hook()
