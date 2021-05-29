@@ -124,6 +124,13 @@
             :pagination="{ pageSize: 10 }"
             :scroll="{ y: 240, x: 1300 }"
           />
+
+          <div class="row mt-5 mb-4">
+            <MultiBarChart
+              v-if="Object.keys(report).length > 0"
+              :data="report"
+            />
+          </div>
         </a-collapse-panel>
       </a-collapse>
     </div>
@@ -135,17 +142,19 @@ import BarChart from "./Visualization/Bar.vue";
 import BoxChart from "./Visualization/Box.vue";
 import AreaChart from "./Visualization/Area.vue";
 import ScatterChart from "./Visualization/Scatter.vue";
+import MultiBarChart from "./Visualization/MultiBar.vue";
 import ApiService from "../services/api-service";
 
 export default {
   name: "Main",
-  components: { BarChart, BoxChart, AreaChart, ScatterChart },
+  components: { BarChart, BoxChart, AreaChart, ScatterChart, MultiBarChart },
   data: () => ({
     csv: null,
     loaded: false,
     columns: [],
     csvFile: null,
     data: [],
+    report: {},
     predictionLoading: false,
     predictions: null,
     predictionColumns: [],
@@ -160,6 +169,7 @@ export default {
       this.csv = null;
       this.csvFile = null;
       this.data = [];
+      this.report = {};
       this.columns = [];
       this.activeKey = [];
       this.predictions = null;
@@ -218,9 +228,10 @@ export default {
       try {
         if (this.predictionsLoaded) return;
         this.predictionLoading = true;
-        let predictions = await ApiService.generateDatasetPrediction(
-          this.csvFile
-        );
+        let {
+          predictions,
+          report
+        } = await ApiService.generateDatasetPrediction(this.csvFile);
         let headers = Object.keys(predictions[0]).map(key => ({
           title: key.toUpperCase(),
           dataIndex: key,
@@ -241,6 +252,7 @@ export default {
         );
         this.predictionColumns = headers;
         this.predictions = predictions;
+        this.report = report;
         this.predictionLoading = false;
         this.predictionsLoaded = true;
         this.$notification["success"]({

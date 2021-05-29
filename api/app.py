@@ -22,8 +22,8 @@ def uploadCsv():
         uploadedfile.save(uploadedfile.filename)
 
     predictor = Predict()
-    predictions = predictor.predictLogistic(str(uploadedfile.filename))
-    return jsonify(predictions)
+    payload = predictor.predictLogistic(str(uploadedfile.filename))
+    return jsonify(payload)
 
 
 if __name__ == '__main__':
