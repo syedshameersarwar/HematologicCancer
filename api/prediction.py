@@ -9,16 +9,17 @@ from sklearn.metrics import classification_report
 
 import pandas as pd
 import pickle
+import os
 
-filename = 'logisticReg.sav'
+model_file = os.path.join(os.getcwd(), "api", 'logisticReg.sav')
 
 
 class Predict(object):
 
-    def predictLogistic(self, filePath="n81.csv"):
+    def predictLogistic(self, filePath):
         cancers = {'0': 'Control', '1': 'AML', '2': 'CML', '3': 'MDS', '4': 'MDS/MPN',
                    '5': 'MPN', '6': 'ALL', '9': 'HL', '10': 'NHL', '11': 'MM', '12': 'APML'}
-        model = pickle.load(open(filename, 'rb'))
+        model = pickle.load(open(model_file, 'rb'))
 
         "Read the data and remove the NULL values by remove that particular row"
         data = pd.read_csv(filePath)
