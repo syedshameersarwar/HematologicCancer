@@ -1,10 +1,6 @@
 <template>
   <div class="col-md-6">
-    <div
-      v-if="series.length > 0"
-      id="chart"
-      style="margin: 15px; padding: 10px"
-    >
+    <div v-if="series.length > 0" style="margin: 15px; padding: 10px">
       <apexchart
         v-if="series.length > 0"
         type="boxPlot"
