@@ -19,7 +19,7 @@
   "scripts": {
     "start": "gunicorn api.app:app",
     "build": "cd client && npm run build",
-    "install": "cd client && npm install"
+    "install": "cd client && npm install && npm install -D"
   },
   "eslintConfig": {
     "extends": "plugin:vue/recommended"
