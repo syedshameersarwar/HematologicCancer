@@ -1,8 +1,9 @@
 <template>
   <div>
     <div style="text-align: center; margin: 5px; padding: 10px">
-      <img id="ned" alt="Ned logo" src="../assets/logo.png" />
+      <img id="ned" alt="Ned logo" src="../assets/ned.png" />
       <img id="nipd" alt="Nipd logo" src="../assets/nipd.jpeg" />
+       <img id="csrd" alt="CSRD logo" src="../assets/csrd.png" />
       <br />
       <h2>
         Early Screening and Detection of Hematologic Cancer using Complete Blood
